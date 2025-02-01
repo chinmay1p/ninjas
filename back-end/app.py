@@ -7,6 +7,26 @@ from bs4 import BeautifulSoup
 import google.generativeai as genai
 import re
 import json
+from flask_cors import CORS
+# ... other imports ...
+
+# Initialize Flask app
+app = Flask(__name__)
+# Enable CORS for all routes
+CORS(app, resources={
+    r"/upload": {
+        "origins": ["http://localhost:3000", "http://localhost:5173"],  # Add your frontend URLs
+        "methods": ["POST"],
+        "allow_headers": ["Content-Type"]
+    },
+    r"/health": {
+        "origins": ["http://localhost:3000", "http://localhost:5173"],
+        "methods": ["GET"]
+    }
+})
+
+
+
 
 # Hardcoded configuration values
 GOOGLE_API_KEY = "AIzaSyCbYL0-nLv8c7090Yqy7FUOtzbULB3Ch0w"
