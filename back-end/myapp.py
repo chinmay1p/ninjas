@@ -5,9 +5,9 @@ import pdfplumber
 from bs4 import BeautifulSoup
 import google.generativeai as genai
 
-genai.configure(api_key="AIzaSyCbYL0-nLv8c7090Yqy7FUOtzbULB3Ch0w")
-GOOGLE_API_KEY = "AIzaSyAYT3n1wmg2dQzbxxKsbsiVX-iaMg3XOLE"
-GOOGLE_CSE_ID = "e1ac3ba241d674191"
+genai.configure(api_key="YOUR_API_KEY")
+GOOGLE_API_KEY = "YOUR_API_KEY"
+GOOGLE_CSE_ID = "TOUR_CSE_ID"
 
 def extract_company_name_from_pdf(pdf_path, pages=2):
     """Extracts the company name from a PDF using Gemini API."""
