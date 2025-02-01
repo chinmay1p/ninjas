@@ -30,7 +30,7 @@ CORS(app, resources={
 
 # Hardcoded configuration values
 GOOGLE_API_KEY = "AIzaSyCbYL0-nLv8c7090Yqy7FUOtzbULB3Ch0w"
-GOOGLE_API_KEY2="AIzaSyAU_icv9FEcNsMJbve9lpUuwrmQCeyKpXw"  # Replace with your actual Google API key
+GOOGLE_API_KEY2="AIzaSyB_vB2f5coD6ueX8Ew1BCR_5MM6ztCkJ-c"  # Replace with your actual Google API key
 GOOGLE_CSE_ID = "e1ac3ba241d674191"  # Replace with your actual Google Custom Search Engine ID
 UPLOAD_FOLDER = "uploads"  # Folder to store uploaded files
 ALLOWED_EXTENSIONS = {"pdf"}  # Allowed file extensions
