@@ -9,7 +9,8 @@ import re
 import json
 
 # Hardcoded configuration values
-GOOGLE_API_KEY = "AIzaSyCbYL0-nLv8c7090Yqy7FUOtzbULB3Ch0w"  # Replace with your actual Google API key
+GOOGLE_API_KEY = "AIzaSyCbYL0-nLv8c7090Yqy7FUOtzbULB3Ch0w"
+GOOGLE_API_KEY2="AIzaSyAU_icv9FEcNsMJbve9lpUuwrmQCeyKpXw"  # Replace with your actual Google API key
 GOOGLE_CSE_ID = "e1ac3ba241d674191"  # Replace with your actual Google Custom Search Engine ID
 UPLOAD_FOLDER = "uploads"  # Folder to store uploaded files
 ALLOWED_EXTENSIONS = {"pdf"}  # Allowed file extensions
@@ -65,7 +66,7 @@ def search_bse_code_from_web(company_name):
 
     # Use Google Custom Search API (optional)
     query = f"{company_name} BSE code OR Security code OR Stock code"
-    url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={GOOGLE_API_KEY}&cx={GOOGLE_CSE_ID}"
+    url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={GOOGLE_API_KEY2}&cx={GOOGLE_CSE_ID}"
     response = requests.get(url)
 
     if response.status_code == 200:
@@ -89,7 +90,7 @@ def search_bse_code_from_web2(company_name):
 
     # Use Google Custom Search API (optional)
     query = f"{company_name} BSE code OR Security code OR Stock code official bseindia website"
-    url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={GOOGLE_API_KEY}&cx={GOOGLE_CSE_ID}"
+    url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={GOOGLE_API_KEY2}&cx={GOOGLE_CSE_ID}"
     response = requests.get(url)
 
     if response.status_code == 200:
@@ -116,7 +117,7 @@ def search_bse_code_from_web3(company_name):
 
     # Use Google Custom Search API (optional)
     query = f"{company_name} stock share price screener.in"
-    url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={GOOGLE_API_KEY}&cx={GOOGLE_CSE_ID}"
+    url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={GOOGLE_API_KEY2}&cx={GOOGLE_CSE_ID}"
     response = requests.get(url)
 
     if response.status_code == 200:
