@@ -8,17 +8,23 @@ import google.generativeai as genai
 import re
 import json
 
+# Hardcoded configuration values
+GOOGLE_API_KEY = "AIzaSyCbYL0-nLv8c7090Yqy7FUOtzbULB3Ch0w"  # Replace with your actual Google API key
+GOOGLE_CSE_ID = "e1ac3ba241d674191"  # Replace with your actual Google Custom Search Engine ID
+UPLOAD_FOLDER = "uploads"  # Folder to store uploaded files
+ALLOWED_EXTENSIONS = {"pdf"}  # Allowed file extensions
+HOST = "0.0.0.0"  # Host for the Flask app
+PORT = 5000  # Port for the Flask app
+FLASK_DEBUG = True  # Debug mode (set to False in production)
+SECRET_KEY = "i-hate-cp"  # Secret key for Flask sessions
+
 # Configure Google Gemini API
-genai.configure(api_key="AIzaSyCbYL0-nLv8c7090Yqy7FUOtzbULB3Ch0w")
-GOOGLE_API_KEY = "AIzaSyAU_icv9FEcNsMJbve9lpUuwrmQCeyKpXw"
-GOOGLE_CSE_ID = "e1ac3ba241d674191"
+genai.configure(api_key=GOOGLE_API_KEY)
 
+# Initialize Flask app
 app = Flask(__name__)
-
-# Configure upload folder and allowed extensions
-UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'pdf'}
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['SECRET_KEY'] = SECRET_KEY
 
 # Ensure the upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
@@ -341,4 +347,4 @@ def health_check():
     return jsonify({"status": "healthy"}), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host=HOST, port=PORT, debug=FLASK_DEBUG)
