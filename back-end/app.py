@@ -13,17 +13,8 @@ from flask_cors import CORS
 # Initialize Flask app
 app = Flask(__name__)
 # Enable CORS for all routes
-CORS(app, resources={
-    r"/upload": {
-        "origins": ["http://localhost:3000", "http://localhost:5173"],  # Add your frontend URLs
-        "methods": ["POST"],
-        "allow_headers": ["Content-Type"]
-    },
-    r"/health": {
-        "origins": ["http://localhost:3000", "http://localhost:5173"],
-        "methods": ["GET"]
-    }
-})
+CORS(app, resources={r"/*": {"origins": "*", "methods": ["GET", "POST", "OPTIONS"]}})
+
 
 
 

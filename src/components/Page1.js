@@ -35,8 +35,10 @@ export default function Page1() {
         headers: {
           'Accept': 'application/json',
         },
-        // mode: 'no-cors',
       });
+      
+      
+      
 
       if (response.status === 0) {
         throw new Error('Network error - CORS issue or server unreachable. Please check your network connection or contact support.');
