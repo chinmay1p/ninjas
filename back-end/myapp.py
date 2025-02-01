@@ -1,33 +1,14 @@
-from flask import Flask, request, jsonify
-import os
-from werkzeug.utils import secure_filename
-import pdfplumber
+import json
+import re
 import requests
+import pdfplumber
 from bs4 import BeautifulSoup
 import google.generativeai as genai
-import re
-import json
 
-# Configure Google Gemini API
 genai.configure(api_key="AIzaSyCbYL0-nLv8c7090Yqy7FUOtzbULB3Ch0w")
-GOOGLE_API_KEY = "AIzaSyAU_icv9FEcNsMJbve9lpUuwrmQCeyKpXw"
+GOOGLE_API_KEY = "AIzaSyAYT3n1wmg2dQzbxxKsbsiVX-iaMg3XOLE"
 GOOGLE_CSE_ID = "e1ac3ba241d674191"
 
-app = Flask(__name__)
-
-# Configure upload folder and allowed extensions
-UPLOAD_FOLDER = 'uploads'
-ALLOWED_EXTENSIONS = {'pdf'}
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
-# Ensure the upload folder exists
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
-
-def allowed_file(filename):
-    """Check if the file has an allowed extension."""
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-# Function to extract company name from PDF
 def extract_company_name_from_pdf(pdf_path, pages=2):
     """Extracts the company name from a PDF using Gemini API."""
     text = ""
@@ -51,13 +32,11 @@ def extract_company_name_from_pdf(pdf_path, pages=2):
     except Exception as e:
         return f"Error: {e}"
 
-# Function to search BSE code from the web
 def search_bse_code_from_web(company_name):
     """Searches the web for the BSE code of the company."""
     if company_name == "Company Name Not Available":
         return "Not Available"
 
-    # Use Google Custom Search API (optional)
     query = f"{company_name} BSE code OR Security code OR Stock code"
     url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={GOOGLE_API_KEY}&cx={GOOGLE_CSE_ID}"
     response = requests.get(url)
@@ -67,21 +46,17 @@ def search_bse_code_from_web(company_name):
         print(search_results)
         for item in search_results.get("items", []):
             link = item.get("link", "")
-            # Check if the link is from BSE India
             if "https://www.bseindia.com/stock-share-price" in link:
-                # Extract the 6-digit BSE code from the URL
                 match = re.search(r"/(\d{6})/?$", link)
                 if match:
-                    return match.group(1)  # Return the 6-digit code
+                    return match.group(1) 
     return "Not Available"
 
-# Function to search BSE code from the web (alternative)
 def search_bse_code_from_web2(company_name):
     """Searches the web for the BSE code of the company."""
     if company_name == "Company Name Not Available":
         return "Not Available"
 
-    # Use Google Custom Search API (optional)
     query = f"{company_name} BSE code OR Security code OR Stock code official bseindia website"
     url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={GOOGLE_API_KEY}&cx={GOOGLE_CSE_ID}"
     response = requests.get(url)
@@ -94,21 +69,17 @@ def search_bse_code_from_web2(company_name):
             print(link)
             title = item.get("title", "").lower()
             snippet = item.get("snippet", "").lower()
-            # Check if the link is from the official BSE India website
             if "https://www.bseindia.com/stock-share-price" in link:
-                # Extract the 6-digit BSE code from the URL
                 match = re.search(r"/(\d{6})/?$", link)
                 if match:
-                    return match.group(1)  # Return the 6-digit code
+                    return match.group(1) 
     return "Not Available"
 
-# Function to search BSE code from the web (alternative 2)
 def search_bse_code_from_web3(company_name):
     """Searches the web for the BSE code of the company."""
     if company_name == "Company Name Not Available":
         return "Not Available"
 
-    # Use Google Custom Search API (optional)
     query = f"{company_name} stock share price screener.in"
     url = f"https://www.googleapis.com/customsearch/v1?q={query}&key={GOOGLE_API_KEY}&cx={GOOGLE_CSE_ID}"
     response = requests.get(url)
@@ -121,25 +92,20 @@ def search_bse_code_from_web3(company_name):
             print(link)
             title = item.get("title", "").lower()
             snippet = item.get("snippet", "").lower()
-            # Check if the link is from the official BSE India website
             if "https://www.bseindia.com/stock-share-price" in link:
-                # Extract the 6-digit BSE code from the URL
                 match = re.search(r"/(\d{6})/?$", link)
                 if match:
-                    return match.group(1)  # Return the 6-digit code
+                    return match.group(1) 
             if "https://money.rediff.com/companies/news/" in link:
-                # Extract the 6-digit BSE code from the URL
                 match = re.search(r"/(\d{6})-\d+", link)
                 if match:
-                    return match.group(1)  # Return the 6-digit code
+                    return match.group(1) 
             if "https://www.screener.in/company/" in link:
-                # Extract the 6-digit BSE code from the URL
                 match = re.search(r"/(\d{6})/?$", link)
                 if match:
-                    return match.group(1)  # Return the 6-digit code
+                    return match.group(1) 
     return "Not Available"
 
-# Function to extract text from PDF
 def extract_text_from_pdf(pdf_path, pages=2):
     """Extracts text from a PDF file."""
     text = ""
@@ -151,7 +117,6 @@ def extract_text_from_pdf(pdf_path, pages=2):
     except Exception as e:
         return f"Error extracting text from PDF: {e}"
 
-# Function to detect report types
 def detect_report_types(text):
     """
     Detects if the PDF contains consolidated, standalone, or both types of tables.
@@ -181,7 +146,6 @@ def detect_report_types(text):
     except Exception as e:
         return f"Error detecting report types: {e}"
 
-# Function to scrape quarterly report table from Screener.in
 def scrape_screener_quarterly_report_table(company_name, report_type):
     """
     Scrapes the entire quarterly report table from Screener.in for a given company.
@@ -215,7 +179,7 @@ def scrape_screener_quarterly_report_table(company_name, report_type):
         headers = [th.text.strip() for th in quarterly_results_table.thead.find_all('th')]
         data_rows = quarterly_results_table.tbody.find_all('tr')
 
-        full_table_data = [headers]  # Initialize 2D list with headers as the first row
+        full_table_data = [headers]
 
         for row in data_rows:
             row_data = [td.text.strip() for td in row.find_all('td')]
@@ -233,7 +197,24 @@ def scrape_screener_quarterly_report_table(company_name, report_type):
         print(f"An unexpected error occurred: {e}")
         return None
 
-# Wrapper function to handle everything
+def display_table(table_data, title):
+    """Displays the table data in a formatted way."""
+    if not table_data:
+        print(f"No data available for {title}.")
+        return
+
+    print(f"\n{title}")
+
+    header_row = table_data[0]
+    separator = "-" * (sum(len(h) + 4 for h in header_row) + len(header_row) - 1)
+    print(separator)
+    print("| " + " | ".join(header_row) + " |")
+    print(separator)
+
+    for row in table_data[1:]:
+        print("| " + " | ".join(row) + " |")
+    print(separator)
+
 def process_pdf_and_return_tables(pdf_path):
     """
     Processes a PDF file and returns the quarterly report tables.
@@ -253,29 +234,24 @@ def process_pdf_and_return_tables(pdf_path):
                   }
               }
     """
-    # Step 1: Extract company name from the PDF
     company_name = extract_company_name_from_pdf(pdf_path)
     if company_name.startswith("Error"):
         return {"error": company_name}
 
-    # Step 2: Search the web for the BSE code
     bse_code = search_bse_code_from_web(company_name)
     if bse_code == "Not Available":
         bse_code = search_bse_code_from_web2(company_name)
     if bse_code == "Not Available":
         bse_code = search_bse_code_from_web3(company_name)
 
-    # Step 3: Extract text from PDF
     pdf_text = extract_text_from_pdf(pdf_path)
     if pdf_text.startswith("Error"):
         return {"error": pdf_text}
-
-    # Step 4: Detect report types (Consolidated, Standalone, or Both)
+    
     report_type = detect_report_types(pdf_text)
     if report_type.startswith("Error"):
         return {"error": report_type}
 
-    # Step 5: Fetch tables from Screener.in based on detected report types
     tables = {}
     if report_type.lower() == "both":
         consolidated_table = scrape_screener_quarterly_report_table(bse_code, "consolidated")
@@ -291,54 +267,42 @@ def process_pdf_and_return_tables(pdf_path):
         if table_data:
             tables[report_type.lower()] = table_data
 
-    # Step 6: Return the results
     return {
         "company_name": company_name,
         "bse_code": bse_code,
         "tables": tables
     }
 
+if __name__ == "_main_":
+    pdf_path = "/content/8094e692-68c8-41d7-b689-319554b07830.pdf"
+
+    result = process_pdf_and_return_tables(pdf_path)
+
+    print(json.dumps(result, indent=4))
+
+
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+import tempfile
+
+app = Flask(__name__)
+CORS(app)
+
 @app.route('/upload', methods=['POST'])
-def upload_file():
-    """Endpoint to handle PDF upload and processing."""
-    # Check if a file was uploaded
+def upload_pdf():
     if 'file' not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400
+        return jsonify({'error': 'No pdf file provided'}), 400
 
-    file = request.files['file']
+    pdf_file = request.files['file']
+    if pdf_file.filename == '':
+        return jsonify({'error': 'No file selected'}), 400
 
-    # Check if the file is empty
-    if file.filename == '':
-        return jsonify({"error": "No file selected"}), 400
+    with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as tmp:
+        pdf_path = tmp.name
+        pdf_file.save(pdf_path)
 
-    # Check if the file is a PDF
-    if not allowed_file(file.filename):
-        return jsonify({"error": "Only PDF files are allowed"}), 400
-
-    try:
-        # Save the file to the upload folder
-        filename = secure_filename(file.filename)
-        file_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-        file.save(file_path)
-
-        # Process the PDF using your backend logic
-        result = process_pdf_and_return_tables(file_path)
-
-        # Return the result as JSON
-        return jsonify(result), 200
-
-    except Exception as e:
-        return jsonify({"error": f"An error occurred: {str(e)}"}), 500
-
-    finally:
-        # Clean up: Delete the uploaded file after processing
-        if os.path.exists(file_path):
-            os.remove(file_path)
-
-@app.route('/health', methods=['GET'])
-def health_check():
-    """Health check endpoint."""
-    return jsonify({"status": "healthy"}), 200
+    result = process_pdf_and_return_tables(pdf_path)
+    return jsonify(result)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
