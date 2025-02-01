@@ -1,8 +1,11 @@
-# Getting Started with Create React App
+# Welcome to Financial Data Retriever
+This is a project made with ReactJS frontend and Flask and python backend
+It retrieves the relevant financial data from a quarterly report pdf file of a company and displays in a table format
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+![image](https://github.com/user-attachments/assets/80a2fb4d-a451-4b45-be38-b4f54197ff59)
+![image](https://github.com/user-attachments/assets/f45ffdb8-78d1-4d5a-ae7f-ff0c0f42fc61)
 
-## Available Scripts
+## How to Run
 
 First to install node modules in the current directory => 
 ### `npm i`
